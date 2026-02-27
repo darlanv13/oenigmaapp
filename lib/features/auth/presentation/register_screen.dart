@@ -55,7 +55,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
               );
               // Como usamos o "Deferred Authentication", mandamos ele direto pra Home ou pra tela que ele estava tentando acessar
-              context.go('/');
+              while (context.canPop()) {
+                context.pop();
+              }
+              context.pushReplacementNamed('home');
             },
             onError: (erro) {
               // Se deu erro (ex: email repetido), mostra em vermelho

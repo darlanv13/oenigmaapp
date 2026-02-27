@@ -26,7 +26,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         password: senha,
         onSuccess: () {
           // Força a navegação para a Home para que o usuário escolha o modo de jogo
-          context.go('/');
+          while (context.canPop()) {
+            context.pop();
+          }
+          context.pushReplacementNamed('home');
         },
         onError: (erro) {
           ScaffoldMessenger.of(context).showSnackBar(

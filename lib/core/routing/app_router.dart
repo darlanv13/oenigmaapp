@@ -17,6 +17,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: '/',
+        name: 'home',
         builder: (context, state) => const HomeScreen(),
       ),
       GoRoute(
