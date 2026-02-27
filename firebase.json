@@ -1,0 +1,39 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "oenigmaapp",
+          "appId": "1:531591692772:android:8291479c30b8164353c7f1",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "oenigmaapp",
+          "configurations": {
+            "android": "1:531591692772:android:8291479c30b8164353c7f1",
+            "ios": "1:531591692772:ios:1ed6367bafbd989953c7f1",
+            "macos": "1:531591692772:ios:1ed6367bafbd989953c7f1",
+            "web": "1:531591692772:web:2e531b012d28f91753c7f1",
+            "windows": "1:531591692772:web:cc819ed34484db3253c7f1"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "531591692772",
+    "project_id": "oenigmaapp",
+    "storage_bucket": "oenigmaapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531591692772:android:90ba9d9e5099be2a53c7f1",
+        "android_client_info": {
+          "package_name": "com.dnstec.oenigmaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMEv7RcpDrtBtdcED_wf3SNhPFqTUEZbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:531591692772:android:8291479c30b8164353c7f1",
+        "android_client_info": {
+          "package_name": "com.example.oenigma"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMEv7RcpDrtBtdcED_wf3SNhPFqTUEZbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
