@@ -179,6 +179,7 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
 
               // 2. Dados da Missão
               DropdownButtonFormField<String>(
+                // ignore: deprecated_member_use
                 value: _modoSelecionado,
                 decoration: const InputDecoration(
                   labelText: 'Modo de Jogo',

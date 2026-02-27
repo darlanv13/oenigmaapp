@@ -35,6 +35,7 @@ class HintTileWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
           color: isUnlocked
+              // ignore: deprecated_member_use
               ? Colors.blueAccent.withOpacity(0.5)
               : Colors.transparent,
           width: 1,

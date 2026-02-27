@@ -103,6 +103,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                       // Multiplica o raio original pelo valor da animação (ex: cresce 20%)
                       radius: enigma.raioMetros * _radiusAnimation.value,
                       // Aplica a opacidade animada na cor de preenchimento
+                      // ignore: deprecated_member_use
                       fillColor: Colors.greenAccent.withOpacity(
                         _opacityAnimation.value,
                       ),

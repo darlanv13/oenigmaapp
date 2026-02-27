@@ -42,7 +42,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/scanner',
         builder: (context, state) {
-          final String enigmaId = state.extra as String;
+          final String? enigmaId = state.extra as String?;
           return ScannerScreen(enigmaId: enigmaId);
         },
       ),

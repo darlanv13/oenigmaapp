@@ -45,14 +45,17 @@ class _VictoryTickerState extends State<VictoryTicker> {
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
+        // ignore: deprecated_member_use
         color: Colors.black.withOpacity(0.7), // Fundo escuro translúcido
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
+          // ignore: deprecated_member_use
           color: Colors.greenAccent.withOpacity(0.5),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.greenAccent.withOpacity(0.2),
             blurRadius: 10,
             spreadRadius: 2,

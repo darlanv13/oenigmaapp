@@ -5,10 +5,10 @@ import '../data/location_service.dart';
 import '../../game_core/presentation/controllers/solve_enigma_controller.dart';
 
 class ScannerScreen extends ConsumerStatefulWidget {
-  final String
+  final String?
   enigmaId; // Precisamos saber qual enigma ele está tentando resolver
 
-  const ScannerScreen({super.key, required this.enigmaId});
+  const ScannerScreen({super.key, this.enigmaId});
 
   @override
   ConsumerState<ScannerScreen> createState() => _ScannerScreenState();
@@ -40,7 +40,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
       await ref
           .read(solveEnigmaControllerProvider.notifier)
           .submitEnigma(
-            enigmaId: widget.enigmaId,
+            enigmaId: widget.enigmaId ?? 'generic_scan',
             qrCode: qrCodeLido,
             lat: position.latitude,
             lon: position.longitude,
