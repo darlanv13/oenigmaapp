@@ -11,6 +11,28 @@ class AuthRepository {
   // Se você nomeou o seu banco como 'oenigma', ajuste para: FirebaseFirestore.instanceFor(app: Firebase.app(), databaseId: 'oenigma')
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Future<void> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw Exception('E-mail não encontrado.');
+      } else if (e.code == 'wrong-password') {
+        throw Exception('Senha incorreta.');
+      } else if (e.code == 'invalid-email') {
+        throw Exception('O e-mail fornecido é inválido.');
+      } else if (e.code == 'user-disabled') {
+        throw Exception('Este usuário foi desativado.');
+      }
+      throw Exception(e.message ?? 'Erro ao fazer login.');
+    } catch (e) {
+      throw Exception('Erro de conexão. Verifique sua internet.');
+    }
+  }
+
   Future<void> register({
     required String email,
     required String password,

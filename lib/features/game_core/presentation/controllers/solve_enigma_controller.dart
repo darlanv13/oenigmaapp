@@ -44,7 +44,7 @@ class SolveEnigmaController extends AsyncNotifier<void> {
         }
       } catch (e) {
         onError(e.toString());
-        throw e; // Repassa o erro para o AsyncValue guardar
+        rethrow; // Repassa o erro para o AsyncValue guardar
       }
     });
   }

@@ -19,8 +19,9 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
   bool isProcessing = false; // Evita ler o mesmo QR Code 10 vezes por segundo
 
   Future<void> _processQrCode(BarcodeCapture capture) async {
-    if (isProcessing)
-      return; // Se já está processando, ignora as outras leituras
+    if (isProcessing) {
+      return;
+    } // Se já está processando, ignora as outras leituras
 
     final List<Barcode> barcodes = capture.barcodes;
     if (barcodes.isEmpty || barcodes.first.rawValue == null) return;

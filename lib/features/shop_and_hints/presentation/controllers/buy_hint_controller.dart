@@ -39,7 +39,7 @@ class BuyHintController extends AsyncNotifier<void> {
         // Formata o erro removendo a palavra "Exception:" padrão do Dart
         final errorMessage = e.toString().replaceAll('Exception: ', '');
         onError(errorMessage);
-        throw e; // Mantém o erro no estado do Riverpod
+        rethrow; // Mantém o erro no estado do Riverpod
       }
     });
   }

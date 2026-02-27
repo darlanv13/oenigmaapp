@@ -64,8 +64,9 @@ class AdminEventDetailScreen extends StatelessWidget {
                   .orderBy('numero_fase')
                   .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData)
+                if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
+                }
 
                 final fases = snapshot.data!.docs;
 

@@ -40,18 +40,27 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
         _lat = position.latitude;
         _lon = position.longitude;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('GPS Capturado com Sucesso!'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('GPS Capturado com Sucesso!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro no GPS: $e'), backgroundColor: Colors.red),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro no GPS: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } finally {
-      setState(() => _isFetchingLocation = false);
+      if (mounted) {
+        setState(() => _isFetchingLocation = false);
+      }
     }
   }
 
@@ -83,22 +92,28 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
         'criadoEm': FieldValue.serverTimestamp(),
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Enigma Lançado! Já está no mapa!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      Navigator.pop(context); // Volta pro Dashboard
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Enigma Lançado! Já está no mapa!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context); // Volta pro Dashboard
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Erro ao salvar: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro ao salvar: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } finally {
-      setState(() => _isSaving = false);
+      if (mounted) {
+        setState(() => _isSaving = false);
+      }
     }
   }
 

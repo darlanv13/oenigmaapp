@@ -34,16 +34,21 @@ class AdminWithdrawalsScreen extends ConsumerWidget {
             'status': novoStatus,
             'processadoEm': FieldValue.serverTimestamp(),
           });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Saque marcado como $novoStatus!'),
-          backgroundColor: novoStatus == 'PAGO' ? Colors.green : Colors.orange,
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Saque marcado como $novoStatus!'),
+            backgroundColor:
+                novoStatus == 'PAGO' ? Colors.green : Colors.orange,
+          ),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro: $e'), backgroundColor: Colors.red),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro: $e'), backgroundColor: Colors.red),
+        );
+      }
     }
   }
 

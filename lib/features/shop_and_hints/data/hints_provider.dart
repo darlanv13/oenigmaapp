@@ -6,8 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final unlockedHintsProvider = StreamProvider.autoDispose
     .family<Map<String, String>, String>((ref, enigmaId) {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null)
-        return Stream.value({}); // Retorna mapa vazio se não estiver logado
+      if (user == null) {
+        return Stream.value({});
+      } // Retorna mapa vazio se não estiver logado
 
       final firestore = FirebaseFirestore.instance;
 

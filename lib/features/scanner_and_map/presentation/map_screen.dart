@@ -16,7 +16,6 @@ class MapScreen extends ConsumerStatefulWidget {
 
 class _MapScreenState extends ConsumerState<MapScreen>
     with SingleTickerProviderStateMixin {
-  GoogleMapController? _mapController;
   LatLng? _initialPosition;
   bool _isLoadingLocation = true;
 
@@ -128,7 +127,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                     mapToolbarEnabled: false,
                     circles: searchZones, // Passa os círculos animados
                     onMapCreated: (GoogleMapController controller) {
-                      _mapController = controller;
+                      // _mapController = controller;
                     },
                   );
                 },

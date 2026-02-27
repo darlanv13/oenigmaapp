@@ -41,7 +41,28 @@ class AuthController extends AsyncNotifier<void> {
         // Limpa a palavra "Exception: " do erro
         final erroLimpo = e.toString().replaceAll('Exception: ', '');
         onError(erroLimpo);
-        throw e;
+        rethrow;
+      }
+    });
+  }
+
+  Future<void> loginUser({
+    required String email,
+    required String password,
+    required Function() onSuccess,
+    required Function(String) onError,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      try {
+        final repository = ref.read(authRepositoryProvider);
+        await repository.login(email: email, password: password);
+        onSuccess();
+      } catch (e) {
+        final erroLimpo = e.toString().replaceAll('Exception: ', '');
+        onError(erroLimpo);
+        rethrow;
       }
     });
   }

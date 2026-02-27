@@ -31,7 +31,9 @@ class LocationService {
 
     // Pega a localização com alta precisão (essencial para o raio de 50 metros)
     return await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.bestForNavigation,
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+      ),
     );
   }
 }
