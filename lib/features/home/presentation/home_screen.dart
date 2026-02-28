@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/utils/auth_guard.dart';
 import '../data/home_providers.dart';
+import '../../admin/data/admin_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -13,12 +14,20 @@ class HomeScreen extends ConsumerWidget {
     final userProfileAsync = ref.watch(userProfileProvider);
     final eventsAsync = ref.watch(homeEventsProvider);
     final rankAsync = ref.watch(userRankingPositionProvider);
+    final isAdminAsync = ref.watch(isAdminProvider);
+    final isAdmin = isAdminAsync.value ?? false;
 
     return Scaffold(
       backgroundColor: Colors.grey[100], // Fundo leve
       appBar: AppBar(
         title: const Text('O Enigma', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
+          if (isAdmin)
+            IconButton(
+              icon: const Icon(FontAwesomeIcons.hammer, color: Colors.amber),
+              tooltip: 'Painel Admin',
+              onPressed: () => context.push('/admin'),
+            ),
           IconButton(
             icon: const Icon(FontAwesomeIcons.circleUser),
             onPressed: () {
