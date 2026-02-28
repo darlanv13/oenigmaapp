@@ -2,9 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// Provider para o estado de autenticação (escuta mudanças de login/logout)
+final authStateChangesProvider = StreamProvider<User?>((ref) {
+  return FirebaseAuth.instance.authStateChanges();
+});
+
 // Provider para pegar os dados do usuário atual
 final userProfileProvider = StreamProvider<Map<String, dynamic>?>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
+  final user = ref.watch(authStateChangesProvider).value;
   if (user == null) {
     return Stream.value(null);
   }
@@ -18,7 +23,7 @@ final userProfileProvider = StreamProvider<Map<String, dynamic>?>((ref) {
 
 // Provider para buscar a posição no ranking (baseado em enigmas_resolvidos_total ou saldo)
 final userRankingPositionProvider = FutureProvider<int>((ref) async {
-  final user = FirebaseAuth.instance.currentUser;
+  final user = ref.watch(authStateChangesProvider).value;
   if (user == null) return 0;
 
   final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
