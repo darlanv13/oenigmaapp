@@ -28,6 +28,10 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
 
     final String qrCodeLido = barcodes.first.rawValue!;
 
+    await _enviarCodigo(qrCodeLido);
+  }
+
+  Future<void> _enviarCodigo(String codigoLido) async {
     setState(() => isProcessing = true);
     cameraController.stop(); // Pausa a câmera para o app não travar
 
@@ -41,7 +45,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
           .read(solveEnigmaControllerProvider.notifier)
           .submitEnigma(
             enigmaId: widget.enigmaId ?? 'generic_scan',
-            qrCode: qrCodeLido,
+            qrCode: codigoLido,
             lat: position.latitude,
             lon: position.longitude,
             onSuccess: (mensagem) {
@@ -54,6 +58,41 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
     } catch (e) {
       _mostrarDialogo(sucesso: false, mensagem: e.toString());
     }
+  }
+
+  void _mostrarDialogoEntradaManual() {
+    final TextEditingController textController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Digitar Código'),
+        content: TextField(
+          controller: textController,
+          decoration: const InputDecoration(
+            hintText: 'Digite o código encontrado',
+            border: OutlineInputBorder(),
+          ),
+          textInputAction: TextInputAction.done,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final codigo = textController.text.trim();
+              if (codigo.isNotEmpty) {
+                Navigator.of(ctx).pop();
+                _enviarCodigo(codigo);
+              }
+            },
+            child: const Text('Enviar'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _mostrarDialogo({required bool sucesso, required String mensagem}) {
@@ -113,6 +152,28 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.greenAccent, width: 4),
                 borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+
+          // Botão para digitar o código manualmente
+          Positioned(
+            bottom: 40,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.keyboard),
+                label: const Text('Digitar Código Manualmente'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                ),
+                onPressed: _mostrarDialogoEntradaManual,
               ),
             ),
           ),

@@ -30,10 +30,19 @@ class LocationService {
     }
 
     // Pega a localização com alta precisão (essencial para o raio de 50 metros)
-    return await Geolocator.getCurrentPosition(
+    final position = await Geolocator.getCurrentPosition(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.bestForNavigation,
       ),
     );
+
+    // Proteção Anti-Fraude e Fake GPS
+    if (position.isMocked) {
+      throw Exception(
+        '🚫 ATENÇÃO! Uso de Fake GPS ou Mock Location detectado. Jogue de forma justa para evitar banimento.',
+      );
+    }
+
+    return position;
   }
 }

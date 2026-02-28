@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -210,14 +212,47 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
               ),
               const SizedBox(height: 16),
 
-              TextFormField(
-                controller: _qrCodeController,
-                decoration: const InputDecoration(
-                  labelText: 'Texto que está no QR Code Físico',
-                  border: OutlineInputBorder(),
-                  helperText: 'Ex: enigma_01_praca_matriz',
-                ),
-                validator: (val) => val!.isEmpty ? 'Campo obrigatório' : null,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _qrCodeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Texto que está no QR Code Físico',
+                        border: OutlineInputBorder(),
+                        helperText: 'Ex: enigma_01_praca_matriz',
+                      ),
+                      validator: (val) =>
+                          val!.isEmpty ? 'Campo obrigatório' : null,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    tooltip: 'Gerar Hash Seguro',
+                    onPressed: () {
+                      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                      final rnd = Random();
+                      final hash = String.fromCharCodes(
+                        Iterable.generate(
+                          8,
+                          (_) => chars.codeUnitAt(rnd.nextInt(chars.length)),
+                        ),
+                      );
+                      setState(() {
+                        _qrCodeController.text = 'OENIGMA-$hash';
+                      });
+                    },
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.amber,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.all(16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
 
