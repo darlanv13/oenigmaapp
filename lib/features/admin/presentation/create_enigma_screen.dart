@@ -7,7 +7,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../scanner_and_map/data/location_service.dart';
 
 class CreateEnigmaScreen extends ConsumerStatefulWidget {
-  const CreateEnigmaScreen({super.key});
+  final String? modoLock;
+  final String? faseId;
+  final String? eventoId;
+
+  const CreateEnigmaScreen({
+    super.key,
+    this.modoLock,
+    this.faseId,
+    this.eventoId,
+  });
 
   @override
   ConsumerState<CreateEnigmaScreen> createState() => _CreateEnigmaScreenState();
@@ -31,7 +40,13 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
   bool _isSaving = false;
 
   // Modo padrão
-  String _modoSelecionado = 'ACHE_E_GANHE';
+  late String _modoSelecionado;
+
+  @override
+  void initState() {
+    super.initState();
+    _modoSelecionado = widget.modoLock ?? 'ACHE_E_GANHE';
+  }
 
   Future<void> _pegarGpsAtual() async {
     setState(() => _isFetchingLocation = true);
@@ -83,17 +98,26 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
 
     try {
       // Salva direto no Firestore
-      await FirebaseFirestore.instance.collection('enigmas').add({
+      final enigmaData = {
         'modo': _modoSelecionado,
         'charada': _charadaController.text,
         'codigo_qr_esperado': _qrCodeController.text,
-        'premio_dinheiro': double.tryParse(_premioController.text) ?? 0.0,
-        'raio_metros': double.tryParse(_raioController.text) ?? 150.0,
         'lat': _lat,
         'lon': _lon,
         'ativo': true,
         'criadoEm': FieldValue.serverTimestamp(),
-      });
+      };
+
+      // Adiciona campos dinâmicos dependendo do modo
+      if (_modoSelecionado == 'ACHE_E_GANHE') {
+        enigmaData['premio_dinheiro'] = double.tryParse(_premioController.text) ?? 0.0;
+        enigmaData['raio_metros'] = double.tryParse(_raioController.text) ?? 150.0;
+      } else if (_modoSelecionado == 'SUPER_PREMIO') {
+        if (widget.faseId != null) enigmaData['faseId'] = widget.faseId;
+        if (widget.eventoId != null) enigmaData['eventoId'] = widget.eventoId;
+      }
+
+      await FirebaseFirestore.instance.collection('enigmas').add(enigmaData);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -198,7 +222,10 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
                     child: Text('Super Prêmio (Evento)'),
                   ),
                 ],
-                onChanged: (val) => setState(() => _modoSelecionado = val!),
+                // Trava o dropdown se o modo foi injetado (ex: SUPER_PREMIO via tela de fase)
+                onChanged: widget.modoLock != null
+                    ? null
+                    : (val) => setState(() => _modoSelecionado = val!),
               ),
               const SizedBox(height: 16),
 

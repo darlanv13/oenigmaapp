@@ -116,6 +116,7 @@ class AdminEventDetailScreen extends StatelessWidget {
                                   extra: {
                                     'modo': 'SUPER_PREMIO',
                                     'faseId': faseId,
+                                    'eventoId': eventId,
                                   },
                                 );
                               },
