@@ -38,6 +38,7 @@ class AuthRepository {
     required String password,
     required String cpf,
     required String phone,
+    required String nome,
   }) async {
     try {
       // 1. Cria a conta de autenticação
@@ -48,11 +49,33 @@ class AuthRepository {
 
       // 2. Se a conta foi criada com sucesso, cria o documento no banco de dados
       if (cred.user != null) {
+        // Pega as 3 primeiras letras do nome
+        String namePart = 'USR';
+        final cleanName = nome.trim().replaceAll(RegExp(r'[^a-zA-Z]'), '').toUpperCase();
+        if (cleanName.length >= 3) {
+          namePart = cleanName.substring(0, 3);
+        } else if (cleanName.isNotEmpty) {
+          namePart = cleanName.padRight(3, 'X');
+        }
+
+        // Pega os 5 primeiros números do CPF
+        String cpfPart = '00000';
+        final cleanCpf = cpf.replaceAll(RegExp(r'\D'), '');
+        if (cleanCpf.length >= 5) {
+          cpfPart = cleanCpf.substring(0, 5);
+        } else if (cleanCpf.isNotEmpty) {
+          cpfPart = cleanCpf.padRight(5, '0');
+        }
+
+        final customId = '$namePart$cpfPart';
+
         await _firestore.collection('users').doc(cred.user!.uid).set({
+          'nome': nome,
           'email': email,
           'telefone': phone,
           'chavePix': cpf, // CPF travado como chave PIX!
           'tipoChavePix': 'CPF',
+          'customId': customId, // Salva o customId no client também para não precisar esperar o Cloud Function
           'saldo_carteira': 0.0,
           'saldo_moedas': 0,
           'enigmas_resolvidos_total': 0,

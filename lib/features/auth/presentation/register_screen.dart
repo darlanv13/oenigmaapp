@@ -17,6 +17,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controladores dos campos
+  final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
   final _cpfController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -35,6 +36,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   void _realizarCadastro() {
     if (_formKey.currentState!.validate()) {
       final String email = _emailController.text.trim();
+      final String nome = _nomeController.text.trim();
       final String senha = _passwordController.text;
       final String cpfLimpo = _cpfMask.getUnmaskedText();
       final String phoneLimpo = _phoneMask.getUnmaskedText();
@@ -47,6 +49,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             password: senha,
             cpf: cpfLimpo,
             phone: phoneLimpo,
+            nome: nome,
             onSuccess: () {
               // Se deu certo, mostra mensagem e manda ele de volta pro jogo!
               ScaffoldMessenger.of(context).showSnackBar(
@@ -94,6 +97,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
+
+              // Campo de Nome
+              TextFormField(
+                controller: _nomeController,
+                textCapitalization: TextCapitalization.words,
+                decoration: const InputDecoration(
+                  labelText: 'Seu Nome',
+                  prefixIcon: Icon(FontAwesomeIcons.user),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (val) => val == null || val.isEmpty
+                    ? 'Por favor, insira seu nome'
+                    : null,
+              ),
+              const SizedBox(height: 16),
 
               // Campo de E-mail
               TextFormField(
@@ -181,6 +199,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   void dispose() {
+    _nomeController.dispose();
     _emailController.dispose();
     _cpfController.dispose();
     _phoneController.dispose();

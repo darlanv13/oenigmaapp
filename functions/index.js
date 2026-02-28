@@ -19,6 +19,7 @@ const solveEnigmaFeature = require("./src/features/game/solveEnigma");
 const buyHintFeature = require("./src/features/shop/buyHint");
 const withdrawFundsFeature = require("./src/features/wallet/withdrawFunds");
 const updateRankFeature = require("./src/features/leaderboard/updateRank");
+const onCreateUserFeature = require("./src/features/auth/onCreateUser");
 
 // Exportação das rotas
 exports.game = {
@@ -35,4 +36,8 @@ exports.wallet = {
 
 exports.leaderboard = {
     triggerUpdate: updateRankFeature.onUserScoreUpdated
+};
+
+exports.auth = {
+    onCreateUser: onCreateUserFeature.onCreateUser
 };

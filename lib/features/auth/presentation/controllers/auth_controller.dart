@@ -18,6 +18,7 @@ class AuthController extends AsyncNotifier<void> {
     required String password,
     required String cpf,
     required String phone,
+    required String nome,
     required Function() onSuccess,
     required Function(String) onError,
   }) async {
@@ -33,6 +34,7 @@ class AuthController extends AsyncNotifier<void> {
           password: password,
           cpf: cpf,
           phone: phone,
+          nome: nome,
         );
 
         // Dispara o callback de sucesso
