@@ -39,7 +39,7 @@ final userRankingPositionProvider = FutureProvider<int>((ref) async {
 // Provider para os cards de eventos (Ache e Ganhe, Super Prêmio, etc)
 final homeEventsProvider = StreamProvider<List<Map<String, dynamic>>>((ref) {
   return FirebaseFirestore.instance
-      .collection('enigmas')
+      .collection('events')
       .where('ativo', isEqualTo: true)
       .snapshots()
       .map((snapshot) {

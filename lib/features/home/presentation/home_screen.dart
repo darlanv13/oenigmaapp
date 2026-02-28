@@ -264,20 +264,24 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEventCard(BuildContext context, Map<String, dynamic> enigma) {
-    final modo = enigma['modo'] ?? 'ACHE_E_GANHE';
-    final premio = enigma['premio_dinheiro'] ?? 0.0;
+  Widget _buildEventCard(BuildContext context, Map<String, dynamic> evento) {
+    final tipoEvento = evento['tipo_evento'] ?? 'ACHE_E_GANHE';
+    final premio = evento['premio_total'] ?? 0.0;
     // Opcional: imagem de background. Usando um placeholder genérico caso não tenha
-    final imageUrl = enigma['imagem_url'] ?? 'https://via.placeholder.com/300x200.png?text=Enigma';
-    final players = enigma['jogadores_ativos'] ?? 0; // Quantidade de pessoas buscando
+    var imageUrl = evento['imagem_url'] ?? '';
+    if (imageUrl.isEmpty) {
+        imageUrl = 'https://via.placeholder.com/300x200.png?text=Evento';
+    }
+    final players = evento['jogadores_ativos'] ?? 0; // Quantidade de pessoas buscando
+    final local = evento['local'] ?? 'Na sua cidade';
 
     return GestureDetector(
       onTap: () {
-        if (modo == 'ACHE_E_GANHE') {
+        if (tipoEvento == 'ACHE_E_GANHE') {
           context.push('/mapa');
         } else {
           // Se for Super Prêmio, vai pra tela de detalhes do evento
-          // context.push('/evento_detalhe', extra: enigma);
+          // context.push('/evento_detalhe', extra: evento);
           context.push('/mapa'); // Fallback por enquanto
         }
       },
@@ -346,7 +350,7 @@ class HomeScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      modo == 'ACHE_E_GANHE' ? 'Caçada no Mapa' : 'Evento Especial',
+                      tipoEvento == 'ACHE_E_GANHE' ? 'Caçada no Mapa' : 'Evento Especial',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.deepPurple.shade300,
@@ -363,14 +367,14 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Row(
+                    Row(
                       children: [
-                        Icon(FontAwesomeIcons.locationDot, size: 10, color: Colors.grey),
-                        SizedBox(width: 4),
+                        const Icon(FontAwesomeIcons.locationDot, size: 10, color: Colors.grey),
+                        const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            'Na sua cidade',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                            local,
+                            style: const TextStyle(fontSize: 10, color: Colors.grey),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
