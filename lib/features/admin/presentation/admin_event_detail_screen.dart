@@ -158,9 +158,30 @@ class AdminEventDetailScreen extends StatelessWidget {
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
-                                          trailing: IconButton(
-                                            icon: const Icon(Icons.delete, color: Colors.red),
-                                            onPressed: () => _excluirEnigma(context, eid),
+                                          trailing: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                                onPressed: () {
+                                                  // Adiciona o ID ao map para o update
+                                                  enData['id'] = eid;
+                                                  context.push(
+                                                    '/admin/create_enigma',
+                                                    extra: {
+                                                      'modo': 'SUPER_PREMIO',
+                                                      'faseId': faseId,
+                                                      'eventoId': eventId,
+                                                      'enigmaParaEditar': enData,
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(Icons.delete, color: Colors.red),
+                                                onPressed: () => _excluirEnigma(context, eid),
+                                              ),
+                                            ],
                                           ),
                                         );
                                       },

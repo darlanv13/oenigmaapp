@@ -84,6 +84,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             modoLock: extra?['modo'] as String?,
             faseId: extra?['faseId'] as String?,
             eventoId: extra?['eventoId'] as String?,
+            enigmaParaEditar: extra?['enigmaParaEditar'] as Map<String, dynamic>?,
           );
         },
       ),

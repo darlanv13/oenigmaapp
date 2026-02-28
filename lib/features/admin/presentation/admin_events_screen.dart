@@ -53,17 +53,19 @@ class AdminEventsScreen extends ConsumerWidget {
     }
   }
 
-  void _abrirDialogNovoEvento(BuildContext context) {
+  void _abrirDialogEvento(BuildContext context, {Map<String, dynamic>? eventoEdit}) {
     final formKey = GlobalKey<FormState>();
-    final nomeController = TextEditingController();
-    final descController = TextEditingController();
-    final premioController = TextEditingController();
-    final localController = TextEditingController();
+    final nomeController = TextEditingController(text: eventoEdit?['nome'] ?? '');
+    final descController = TextEditingController(text: eventoEdit?['descricao'] ?? '');
+    final premioController = TextEditingController(text: (eventoEdit?['premio_total'] ?? '').toString());
+    final localController = TextEditingController(text: eventoEdit?['local'] ?? '');
+
+    final isEdicao = eventoEdit != null;
 
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Novo Evento Super Prêmio'),
+        title: Text(isEdicao ? 'Editar Evento' : 'Novo Evento Super Prêmio'),
         content: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -103,14 +105,37 @@ class AdminEventsScreen extends ConsumerWidget {
               backgroundColor: Colors.deepPurple,
               foregroundColor: Colors.white,
             ),
-            onPressed: () {
+            onPressed: () async {
               if (formKey.currentState!.validate()) {
                 final premio = double.tryParse(premioController.text) ?? 0.0;
                 Navigator.pop(ctx);
-                _criarNovoEvento(context, nomeController.text, descController.text, premio, localController.text);
+
+                if (isEdicao) {
+                  try {
+                    await FirebaseFirestore.instance.collection('events').doc(eventoEdit['id']).update({
+                      'nome': nomeController.text,
+                      'descricao': descController.text,
+                      'premio_total': premio,
+                      'local': localController.text,
+                    });
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Evento atualizado!'), backgroundColor: Colors.green),
+                      );
+                    }
+                  } catch (e) {
+                     if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Erro ao atualizar: $e'), backgroundColor: Colors.red),
+                      );
+                    }
+                  }
+                } else {
+                  _criarNovoEvento(context, nomeController.text, descController.text, premio, localController.text);
+                }
               }
             },
-            child: const Text('Criar Estrutura'),
+            child: Text(isEdicao ? 'Salvar Alterações' : 'Criar Estrutura'),
           ),
         ],
       ),
@@ -131,7 +156,7 @@ class AdminEventsScreen extends ConsumerWidget {
                 subtitle: const Text('Cria um evento com 5 fases e múltiplos enigmas.'),
                 onTap: () {
                   Navigator.pop(ctx);
-                  _abrirDialogNovoEvento(context);
+                  _abrirDialogEvento(context);
                 },
               ),
               ListTile(
@@ -201,7 +226,16 @@ class AdminEventsScreen extends ConsumerWidget {
                         : 'Status: RASCUNHO (Oculto)\nTipo: $tipo\nPrêmio: R\$ $premio',
                   ),
                   isThreeLine: true,
-                  trailing: const Icon(Icons.arrow_forward_ios),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () => _abrirDialogEvento(context, eventoEdit: evento),
+                      ),
+                      const Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
                   onTap: () {
                     // Navega para a tela de detalhes do evento (para preencher as fases)
                     context.push('/admin/events/${evento['id']}', extra: evento['nome']);
