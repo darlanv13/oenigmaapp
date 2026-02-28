@@ -52,15 +52,19 @@ class _MapScreenState extends ConsumerState<MapScreen>
     try {
       final locationService = ref.read(locationServiceProvider);
       final position = await locationService.getCurrentPosition();
-      setState(() {
-        _initialPosition = LatLng(position.latitude, position.longitude);
-        _isLoadingLocation = false;
-      });
+      if (mounted) {
+        setState(() {
+          _initialPosition = LatLng(position.latitude, position.longitude);
+          _isLoadingLocation = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _initialPosition = const LatLng(-14.2350, -51.9253);
-        _isLoadingLocation = false;
-      });
+      if (mounted) {
+        setState(() {
+          _initialPosition = const LatLng(-14.2350, -51.9253);
+          _isLoadingLocation = false;
+        });
+      }
     }
   }
 

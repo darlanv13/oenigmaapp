@@ -2,7 +2,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
-// import 'package:go_router/go_router.dart';
 
 class AdminEventDetailScreen extends StatelessWidget {
   final String eventId;
@@ -28,6 +27,30 @@ class AdminEventDetailScreen extends StatelessWidget {
     );
   }
 
+  void _excluirEnigma(BuildContext context, String enigmaId) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Excluir Enigma'),
+        content: const Text('Tem certeza que deseja apagar este enigma? Esta ação não pode ser desfeita.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancelar')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              FirebaseFirestore.instance.collection('enigmas').doc(enigmaId).delete();
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Enigma apagado.'), backgroundColor: Colors.red),
+              );
+            },
+            child: const Text('Excluir', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +63,11 @@ class AdminEventDetailScreen extends StatelessWidget {
             icon: const Icon(Icons.publish),
             tooltip: 'Publicar Evento',
             onPressed: () => _ativarEvento(context, true),
+          ),
+          IconButton(
+            icon: const Icon(Icons.pause),
+            tooltip: 'Pausar Evento',
+            onPressed: () => _ativarEvento(context, false),
           ),
         ],
       ),
@@ -99,27 +127,102 @@ class AdminEventDetailScreen extends StatelessWidget {
                           'Toque para ver/adicionar enigmas',
                         ),
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                foregroundColor: Colors.white,
-                              ),
-                              icon: const Icon(FontAwesomeIcons.locationDot),
-                              label: const Text('Plantar Enigma nesta Fase'),
-                              onPressed: () {
-                                // Aqui nós abrimos AQUELA TELA de capturar GPS que já construímos,
-                                // mas enviando o "faseId" para que o enigma fique amarrado a esta fase do evento!
-                                context.push(
-                                  '/admin/create_enigma',
-                                  extra: {
-                                    'modo': 'SUPER_PREMIO',
-                                    'faseId': faseId,
-                                  },
-                                );
-                              },
-                            ),
+                          StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('enigmas')
+                                .where('faseId', isEqualTo: faseId)
+                                .snapshots(),
+                            builder: (ctx, enigmaSnap) {
+                              if (!enigmaSnap.hasData) {
+                                return const CircularProgressIndicator();
+                              }
+
+                              final enigmas = enigmaSnap.data!.docs;
+                              final qtd = enigmas.length;
+
+                              return Column(
+                                children: [
+                                  if (qtd > 0)
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemCount: qtd,
+                                      itemBuilder: (context, eIndex) {
+                                        final enData = enigmas[eIndex].data() as Map<String, dynamic>;
+                                        final eid = enigmas[eIndex].id;
+                                        return ListTile(
+                                          leading: const Icon(FontAwesomeIcons.puzzlePiece, size: 20),
+                                          title: Text('Enigma ${eIndex + 1}'),
+                                          subtitle: Text(
+                                            enData['charada'] ?? 'Sem charada',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          trailing: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(Icons.edit, color: Colors.blue),
+                                                onPressed: () {
+                                                  // Adiciona o ID ao map para o update
+                                                  enData['id'] = eid;
+                                                  context.push(
+                                                    '/admin/create_enigma',
+                                                    extra: {
+                                                      'modo': 'SUPER_PREMIO',
+                                                      'faseId': faseId,
+                                                      'eventoId': eventId,
+                                                      'enigmaParaEditar': enData,
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(Icons.delete, color: Colors.red),
+                                                onPressed: () => _excluirEnigma(context, eid),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  if (qtd == 0)
+                                    const Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Text('Nenhum enigma cadastrado nesta fase.', style: TextStyle(color: Colors.grey)),
+                                    ),
+                                  if (qtd < 3)
+                                    Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                          foregroundColor: Colors.white,
+                                        ),
+                                        icon: const Icon(FontAwesomeIcons.locationDot),
+                                        label: Text('Plantar Enigma nesta Fase (${3 - qtd} restantes)'),
+                                        onPressed: () {
+                                          // Aqui nós abrimos AQUELA TELA de capturar GPS que já construímos,
+                                          // mas enviando o "faseId" para que o enigma fique amarrado a esta fase do evento!
+                                          context.push(
+                                            '/admin/create_enigma',
+                                            extra: {
+                                              'modo': 'SUPER_PREMIO',
+                                              'faseId': faseId,
+                                              'eventoId': eventId,
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  if (qtd >= 3)
+                                    const Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Text('✨ Fase Completa (3/3 Enigmas) ✨', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                                    ),
+                                ],
+                              );
+                            },
                           ),
                         ],
                       ),

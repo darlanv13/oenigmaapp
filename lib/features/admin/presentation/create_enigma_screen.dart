@@ -7,7 +7,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../scanner_and_map/data/location_service.dart';
 
 class CreateEnigmaScreen extends ConsumerStatefulWidget {
-  const CreateEnigmaScreen({super.key});
+  final String? modoLock;
+  final String? faseId;
+  final String? eventoId;
+  final Map<String, dynamic>? enigmaParaEditar;
+
+  const CreateEnigmaScreen({
+    super.key,
+    this.modoLock,
+    this.faseId,
+    this.eventoId,
+    this.enigmaParaEditar,
+  });
 
   @override
   ConsumerState<CreateEnigmaScreen> createState() => _CreateEnigmaScreenState();
@@ -17,12 +28,10 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Controladores do formulário
-  final _charadaController = TextEditingController();
-  final _qrCodeController = TextEditingController();
-  final _premioController = TextEditingController();
-  final _raioController = TextEditingController(
-    text: '150',
-  ); // Raio padrão de 150m
+  late TextEditingController _charadaController;
+  late TextEditingController _qrCodeController;
+  late TextEditingController _premioController;
+  late TextEditingController _raioController;
 
   // Variáveis de localização
   double? _lat;
@@ -31,7 +40,41 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
   bool _isSaving = false;
 
   // Modo padrão
-  String _modoSelecionado = 'ACHE_E_GANHE';
+  late String _modoSelecionado;
+  late bool _isEdicao;
+
+  @override
+  void initState() {
+    super.initState();
+    _isEdicao = widget.enigmaParaEditar != null;
+
+    // Configura o modo
+    if (_isEdicao) {
+      _modoSelecionado = widget.enigmaParaEditar!['modo'] ?? 'ACHE_E_GANHE';
+      _lat = widget.enigmaParaEditar!['lat'] is double ? widget.enigmaParaEditar!['lat'] : double.tryParse(widget.enigmaParaEditar!['lat'].toString());
+      _lon = widget.enigmaParaEditar!['lon'] is double ? widget.enigmaParaEditar!['lon'] : double.tryParse(widget.enigmaParaEditar!['lon'].toString());
+    } else {
+      _modoSelecionado = widget.modoLock ?? 'ACHE_E_GANHE';
+    }
+
+    _charadaController = TextEditingController(text: _isEdicao ? widget.enigmaParaEditar!['charada'] : '');
+    _qrCodeController = TextEditingController(text: _isEdicao ? widget.enigmaParaEditar!['codigo_qr_esperado'] : '');
+
+    final premioInicial = _isEdicao ? (widget.enigmaParaEditar!['premio_dinheiro'] ?? '').toString() : '';
+    _premioController = TextEditingController(text: premioInicial);
+
+    final raioInicial = _isEdicao ? (widget.enigmaParaEditar!['raio_metros'] ?? 150).toString() : '150';
+    _raioController = TextEditingController(text: raioInicial);
+  }
+
+  @override
+  void dispose() {
+    _charadaController.dispose();
+    _qrCodeController.dispose();
+    _premioController.dispose();
+    _raioController.dispose();
+    super.dispose();
+  }
 
   Future<void> _pegarGpsAtual() async {
     setState(() => _isFetchingLocation = true);
@@ -82,23 +125,36 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
     setState(() => _isSaving = true);
 
     try {
-      // Salva direto no Firestore
-      await FirebaseFirestore.instance.collection('enigmas').add({
+      final enigmaData = {
         'modo': _modoSelecionado,
         'charada': _charadaController.text,
         'codigo_qr_esperado': _qrCodeController.text,
-        'premio_dinheiro': double.tryParse(_premioController.text) ?? 0.0,
-        'raio_metros': double.tryParse(_raioController.text) ?? 150.0,
         'lat': _lat,
         'lon': _lon,
         'ativo': true,
-        'criadoEm': FieldValue.serverTimestamp(),
-      });
+      };
+
+      // Adiciona campos dinâmicos dependendo do modo
+      if (_modoSelecionado == 'ACHE_E_GANHE') {
+        enigmaData['premio_dinheiro'] = double.tryParse(_premioController.text) ?? 0.0;
+        enigmaData['raio_metros'] = double.tryParse(_raioController.text) ?? 150.0;
+      } else if (_modoSelecionado == 'SUPER_PREMIO') {
+        if (widget.faseId != null) enigmaData['faseId'] = widget.faseId;
+        if (widget.eventoId != null) enigmaData['eventoId'] = widget.eventoId;
+      }
+
+      if (_isEdicao) {
+        enigmaData['atualizadoEm'] = FieldValue.serverTimestamp();
+        await FirebaseFirestore.instance.collection('enigmas').doc(widget.enigmaParaEditar!['id']).update(enigmaData);
+      } else {
+        enigmaData['criadoEm'] = FieldValue.serverTimestamp();
+        await FirebaseFirestore.instance.collection('enigmas').add(enigmaData);
+      }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Enigma Lançado! Já está no mapa!'),
+          SnackBar(
+            content: Text(_isEdicao ? 'Enigma atualizado com sucesso!' : 'Enigma Lançado! Já está no mapa!'),
             backgroundColor: Colors.green,
           ),
         );
@@ -124,7 +180,7 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plantar Novo Enigma'),
+        title: Text(_isEdicao ? 'Editar Enigma' : 'Plantar Novo Enigma'),
         backgroundColor: Colors.deepPurple.shade900,
       ),
       body: SingleChildScrollView(
@@ -198,7 +254,10 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
                     child: Text('Super Prêmio (Evento)'),
                   ),
                 ],
-                onChanged: (val) => setState(() => _modoSelecionado = val!),
+                // Trava o dropdown se o modo foi injetado ou for edição
+                onChanged: (widget.modoLock != null || _isEdicao)
+                    ? null
+                    : (val) => setState(() => _modoSelecionado = val!),
               ),
               const SizedBox(height: 16),
 
@@ -301,9 +360,9 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
                 ),
                 child: _isSaving
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        'PLANTAR ENIGMA NO MAPA',
-                        style: TextStyle(
+                    : Text(
+                        _isEdicao ? 'SALVAR ALTERAÇÕES' : 'PLANTAR ENIGMA NO MAPA',
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),

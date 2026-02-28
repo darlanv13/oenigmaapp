@@ -9,6 +9,9 @@ import 'package:oenigma/features/scanner_and_map/presentation/map_screen.dart';
 import 'package:oenigma/features/scanner_and_map/presentation/scanner_screen.dart';
 import 'package:oenigma/features/wallet/presentation/wallet_screen.dart';
 import 'package:oenigma/features/shop_and_hints/presentation/metal_detector_screen.dart';
+import 'package:oenigma/features/admin/presentation/admin_events_screen.dart';
+import 'package:oenigma/features/admin/presentation/admin_event_detail_screen.dart';
+import 'package:oenigma/features/admin/presentation/create_enigma_screen.dart';
 
 // Criamos um Provider para o roteador. Isso é ótimo porque
 // permite injetar lógicas de autenticação depois (ex: se não logou, vai pra tela de login)
@@ -55,6 +58,33 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           return MetalDetectorScreen(
             targetLat: coords['lat']!,
             targetLon: coords['lon']!,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/admin',
+        builder: (context, state) => const AdminEventsScreen(),
+      ),
+      GoRoute(
+        path: '/admin/events/:id',
+        builder: (context, state) {
+          final eventId = state.pathParameters['id']!;
+          final eventName = state.extra as String? ?? 'Detalhes do Evento';
+          return AdminEventDetailScreen(
+            eventId: eventId,
+            eventName: eventName,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/admin/create_enigma',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return CreateEnigmaScreen(
+            modoLock: extra?['modo'] as String?,
+            faseId: extra?['faseId'] as String?,
+            eventoId: extra?['eventoId'] as String?,
+            enigmaParaEditar: extra?['enigmaParaEditar'] as Map<String, dynamic>?,
           );
         },
       ),
