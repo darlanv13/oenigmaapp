@@ -1,22 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../data/victory_feed_provider.dart';
 
-class VictoryTicker extends StatefulWidget {
+class VictoryTicker extends ConsumerStatefulWidget {
   const VictoryTicker({super.key});
 
   @override
-  State<VictoryTicker> createState() => _VictoryTickerState();
+  ConsumerState<VictoryTicker> createState() => _VictoryTickerState();
 }
 
-class _VictoryTickerState extends State<VictoryTicker> {
-  // Lista simulada (No futuro, virá do Firebase)
-  final List<String> _mensagens = [
-    "🏆 Marcos_88 acabou de achar R\$ 50,00 no Centro!",
-    "🔥 Alguém resolveu o Enigma 3 do Super Prêmio!",
-    "💸 Ana_C sacou R\$ 120,00 via PIX agora mesmo!",
-    "🏃‍♂️ Faltam 2 horas para o Enigma Oculto sumir!",
-  ];
-
+class _VictoryTickerState extends ConsumerState<VictoryTicker> {
   int _currentIndex = 0;
   Timer? _timer;
 
@@ -27,7 +21,7 @@ class _VictoryTickerState extends State<VictoryTicker> {
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (mounted) {
         setState(() {
-          _currentIndex = (_currentIndex + 1) % _mensagens.length;
+          _currentIndex++;
         });
       }
     });
@@ -41,6 +35,20 @@ class _VictoryTickerState extends State<VictoryTicker> {
 
   @override
   Widget build(BuildContext context) {
+    // Escuta os feeds reais vindos do banco de dados (Firestore)
+    final feedAsync = ref.watch(victoryFeedProvider);
+
+    // Lista padrão garantida enquanto carrega ou em caso de erro
+    final List<String> mensagens = feedAsync.when(
+      data: (lista) => lista.isEmpty ? ["Nenhum prêmio recente."] : lista,
+      loading: () => ["Buscando vencedores recentes..."],
+      error: (e, stack) => ["🏆 Continue procurando tesouros!"],
+    );
+
+    // Calcula o índice atual seguro baseado no tamanho da lista disponível
+    final int safeIndex = mensagens.isEmpty ? 0 : _currentIndex % mensagens.length;
+    final String mensagemAtual = mensagens.isEmpty ? "" : mensagens[safeIndex];
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -78,9 +86,9 @@ class _VictoryTickerState extends State<VictoryTicker> {
           );
         },
         child: Text(
-          _mensagens[_currentIndex],
+          mensagemAtual,
           key: ValueKey<int>(
-            _currentIndex,
+            safeIndex,
           ), // Fundamental para o AnimatedSwitcher entender a troca
           style: const TextStyle(
             color: Colors.white,

@@ -135,6 +135,49 @@ class EnigmaDetailScreen extends ConsumerWidget {
                     isUnlocked: unlockedHints.containsKey('dica_gps_1'),
                     conteudoDesbloqueado: unlockedHints['dica_gps_1'],
                   ),
+
+                  const SizedBox(height: 20),
+                  const Divider(),
+                  const SizedBox(height: 10),
+
+                  // Botão do Detector de Metais
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.purple.shade700, Colors.deepPurple],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      leading: const Icon(Icons.track_changes, color: Colors.white, size: 40),
+                      title: const Text(
+                        'Usar Detector de Metais',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: const Text(
+                        'Acha que está perto? Ligue o radar para encontrar a localização exata.',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      trailing: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber,
+                          foregroundColor: Colors.black,
+                        ),
+                        onPressed: () {
+                          // Aqui idealmente checaríamos saldo ou se comprou o item
+                          // Navega para a tela do radar
+                          final lat = enigma['lat'] is double ? enigma['lat'] : double.tryParse(enigma['lat'].toString()) ?? 0.0;
+                          final lon = enigma['lon'] is double ? enigma['lon'] : double.tryParse(enigma['lon'].toString()) ?? 0.0;
+
+                          context.push('/detector', extra: {
+                            'lat': lat,
+                            'lon': lon,
+                          });
+                        },
+                        child: const Text('LIGAR'),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

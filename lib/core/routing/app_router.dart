@@ -8,6 +8,7 @@ import 'package:oenigma/features/home/presentation/home_screen.dart';
 import 'package:oenigma/features/scanner_and_map/presentation/map_screen.dart';
 import 'package:oenigma/features/scanner_and_map/presentation/scanner_screen.dart';
 import 'package:oenigma/features/wallet/presentation/wallet_screen.dart';
+import 'package:oenigma/features/shop_and_hints/presentation/metal_detector_screen.dart';
 
 // Criamos um Provider para o roteador. Isso é ótimo porque
 // permite injetar lógicas de autenticação depois (ex: se não logou, vai pra tela de login)
@@ -45,6 +46,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final String? enigmaId = state.extra as String?;
           return ScannerScreen(enigmaId: enigmaId);
+        },
+      ),
+      GoRoute(
+        path: '/detector',
+        builder: (context, state) {
+          final coords = state.extra as Map<String, double>;
+          return MetalDetectorScreen(
+            targetLat: coords['lat']!,
+            targetLon: coords['lon']!,
+          );
         },
       ),
     ],
