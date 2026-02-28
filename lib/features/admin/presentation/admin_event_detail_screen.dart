@@ -90,14 +90,26 @@ class AdminEventDetailScreen extends StatelessWidget {
               stream: FirebaseFirestore.instance
                   .collection('phases')
                   .where('id_evento', isEqualTo: eventId)
-                  .orderBy('numero_fase')
+                  // Removendo o .orderBy() para evitar a necessidade de Índice Composto no Firestore.
+                  // Vamos ordenar localmente no Dart abaixo.
                   .snapshots(),
               builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(child: Text('Erro: ${snapshot.error}'));
+                }
+
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                final fases = snapshot.data!.docs;
+                final fases = snapshot.data!.docs.toList();
+
+                // Ordenação local (como são só 5 fases, é instantâneo e não pesa nada)
+                fases.sort((a, b) {
+                  final int numA = (a.data() as Map<String, dynamic>)['numero_fase'] ?? 0;
+                  final int numB = (b.data() as Map<String, dynamic>)['numero_fase'] ?? 0;
+                  return numA.compareTo(numB);
+                });
 
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
@@ -133,6 +145,10 @@ class AdminEventDetailScreen extends StatelessWidget {
                                 .where('faseId', isEqualTo: faseId)
                                 .snapshots(),
                             builder: (ctx, enigmaSnap) {
+                              if (enigmaSnap.hasError) {
+                                return Center(child: Text('Erro: ${enigmaSnap.error}'));
+                              }
+
                               if (!enigmaSnap.hasData) {
                                 return const CircularProgressIndicator();
                               }
