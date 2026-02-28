@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -143,7 +144,7 @@ class AdminEventsScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _abrirDialogNovoEvento(context),
         backgroundColor: Colors.deepPurple,
-        icon: const Icon(Icons.add),
+        icon: const Icon(FontAwesomeIcons.plus),
         label: const Text('Novo Evento'),
       ),
     );

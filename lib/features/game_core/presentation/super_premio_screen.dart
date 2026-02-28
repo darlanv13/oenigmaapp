@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 
 // Simulação rápida para a interface (Na prática, viria do Riverpod/Firestore)
@@ -46,7 +47,7 @@ class SuperPremioScreen extends StatelessWidget {
                     : (isConcluida ? Colors.green : Colors.blue),
                 child: Icon(
                   isBloqueada
-                      ? Icons.lock
+                      ? FontAwesomeIcons.lock
                       : (isConcluida ? Icons.check : Icons.play_arrow),
                   color: Colors.white,
                 ),

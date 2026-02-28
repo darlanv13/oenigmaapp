@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -153,7 +154,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
         onPressed: () {
           context.push('/scanner');
         },
-        icon: const Icon(Icons.qr_code_scanner),
+        icon: const Icon(FontAwesomeIcons.qrcode),
         label: const Text('Escanear Local'),
         backgroundColor: Colors.green,
       ),

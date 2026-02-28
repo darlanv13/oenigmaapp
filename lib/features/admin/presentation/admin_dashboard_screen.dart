@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,7 +23,7 @@ class AdminDashboardScreen extends StatelessWidget {
           _buildAdminCard(
             context,
             title: 'Novo Enigma',
-            icon: Icons.add_location_alt,
+            icon: FontAwesomeIcons.locationDot,
             color: Colors.green,
             onTap: () => context.push('/admin/create_enigma'),
           ),
@@ -47,7 +48,7 @@ class AdminDashboardScreen extends StatelessWidget {
           _buildAdminCard(
             context,
             title: 'Monitor de Fraudes',
-            icon: Icons.security,
+            icon: FontAwesomeIcons.shieldHalved,
             color: Colors.red.shade800,
             onTap: () {},
           ),

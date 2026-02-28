@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -52,7 +53,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(Icons.lock_person, size: 80, color: Colors.blueGrey),
+                const Icon(FontAwesomeIcons.lock, size: 80, color: Colors.blueGrey),
                 const SizedBox(height: 24),
                 const Text(
                   'Bem-vindo de volta!',
@@ -67,7 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     labelText: 'E-mail',
-                    prefixIcon: Icon(Icons.email),
+                    prefixIcon: Icon(FontAwesomeIcons.envelope),
                     border: OutlineInputBorder(),
                   ),
                   validator: AppValidators.validarEmail,
@@ -80,7 +81,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   obscureText: true,
                   decoration: const InputDecoration(
                     labelText: 'Senha',
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: Icon(FontAwesomeIcons.lock),
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {

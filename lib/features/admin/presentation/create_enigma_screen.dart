@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -166,7 +167,7 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : const Icon(Icons.gps_fixed),
+                            : const Icon(FontAwesomeIcons.locationCrosshairs),
                         label: const Text('Capturar Meu GPS Agora'),
                         onPressed: _isFetchingLocation ? null : _pegarGpsAtual,
                         style: ElevatedButton.styleFrom(
@@ -228,7 +229,7 @@ class _CreateEnigmaScreenState extends ConsumerState<CreateEnigmaScreen> {
                   ),
                   const SizedBox(width: 8),
                   IconButton(
-                    icon: const Icon(Icons.refresh),
+                    icon: const Icon(FontAwesomeIcons.arrowsRotate),
                     tooltip: 'Gerar Hash Seguro',
                     onPressed: () {
                       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +34,7 @@ void _showLoginPrompt(BuildContext context) {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.lock_person, size: 64, color: Colors.blueGrey),
+            const Icon(FontAwesomeIcons.lock, size: 64, color: Colors.blueGrey),
             const SizedBox(height: 16),
             const Text(
               'Crie sua conta para jogar!',

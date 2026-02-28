@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -133,7 +134,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
         title: const Text('Escanear Enigma'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.flash_on),
+            icon: const Icon(FontAwesomeIcons.bolt),
             onPressed: () =>
                 cameraController.toggleTorch(), // Botão de lanterna
           ),
@@ -163,7 +164,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen> {
             right: 0,
             child: Center(
               child: ElevatedButton.icon(
-                icon: const Icon(Icons.keyboard),
+                icon: const Icon(FontAwesomeIcons.keyboard),
                 label: const Text('Digitar Código Manualmente'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,

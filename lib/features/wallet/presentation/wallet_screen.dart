@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/wallet_providers.dart';
@@ -55,7 +56,7 @@ class WalletScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton.icon(
-                          icon: const Icon(Icons.pix, color: Colors.green),
+                          icon: const Icon(FontAwesomeIcons.pix, color: Colors.green),
                           label: const Text('Solicitar Saque (PIX)'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,

@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
@@ -105,7 +106,7 @@ class AdminEventDetailScreen extends StatelessWidget {
                                 backgroundColor: Colors.green,
                                 foregroundColor: Colors.white,
                               ),
-                              icon: const Icon(Icons.add_location_alt),
+                              icon: const Icon(FontAwesomeIcons.locationDot),
                               label: const Text('Plantar Enigma nesta Fase'),
                               onPressed: () {
                                 // Aqui nós abrimos AQUELA TELA de capturar GPS que já construímos,

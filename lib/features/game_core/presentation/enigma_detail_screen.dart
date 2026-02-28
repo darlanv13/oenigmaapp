@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -107,7 +108,7 @@ class EnigmaDetailScreen extends ConsumerWidget {
                   HintTileWidget(
                     enigmaId: enigmaId,
                     hintId: 'dica_texto_1', // Exemplo de ID da dica
-                    icon: Icons.text_snippet,
+                    icon: FontAwesomeIcons.fileLines,
                     title: 'Dica de Texto',
                     subtitle: 'Uma pista extra escrita.',
                     priceCoins: 50,
@@ -118,7 +119,7 @@ class EnigmaDetailScreen extends ConsumerWidget {
                   HintTileWidget(
                     enigmaId: enigmaId,
                     hintId: 'dica_foto_1',
-                    icon: Icons.image,
+                    icon: FontAwesomeIcons.image,
                     title: 'Foto do Local',
                     subtitle: 'Uma foto desfocada ou um detalhe do lugar.',
                     priceCoins: 150,
@@ -128,7 +129,7 @@ class EnigmaDetailScreen extends ConsumerWidget {
                   HintTileWidget(
                     enigmaId: enigmaId,
                     hintId: 'dica_gps_1',
-                    icon: Icons.radar,
+                    icon: FontAwesomeIcons.satelliteDish,
                     title: 'Aproximação GPS',
                     subtitle: 'Reduz a área de busca no mapa para 20 metros.',
                     priceCoins: 300,
@@ -149,7 +150,7 @@ class EnigmaDetailScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.track_changes, color: Colors.white, size: 40),
+                      leading: const Icon(FontAwesomeIcons.bullseye, color: Colors.white, size: 40),
                       title: const Text(
                         'Usar Detector de Metais',
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -190,7 +191,7 @@ class EnigmaDetailScreen extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton.icon(
-            icon: const Icon(Icons.qr_code_scanner, size: 28),
+            icon: const Icon(FontAwesomeIcons.qrcode, size: 28),
             label: const Padding(
               padding: EdgeInsets.symmetric(vertical: 16.0),
               child: Text(

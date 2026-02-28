@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 
 class PhaseEnigmasScreen extends StatelessWidget {
@@ -76,7 +77,7 @@ class PhaseEnigmasScreen extends StatelessWidget {
                               ),
                               if (isResolvido)
                                 const Icon(
-                                  Icons.check_circle,
+                                  FontAwesomeIcons.circleCheck,
                                   color: Colors.green,
                                 ),
                             ],
@@ -102,7 +103,7 @@ class PhaseEnigmasScreen extends StatelessWidget {
                                       // context.push('/enigma_detalhe', extra: enigma);
                                     },
                               icon: Icon(
-                                isResolvido ? Icons.lock_open : Icons.search,
+                                isResolvido ? FontAwesomeIcons.lockOpen : Icons.search,
                               ),
                               label: Text(
                                 isResolvido

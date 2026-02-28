@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -166,7 +167,7 @@ class _MetalDetectorScreenState extends ConsumerState<MetalDetectorScreen>
                   },
                 ),
                 Icon(
-                  Icons.radar,
+                  FontAwesomeIcons.satelliteDish,
                   size: 100,
                   color: _isDetecting ? Colors.greenAccent : Colors.grey,
                 ),
@@ -187,7 +188,7 @@ class _MetalDetectorScreenState extends ConsumerState<MetalDetectorScreen>
             ),
             const SizedBox(height: 40),
             ElevatedButton.icon(
-              icon: Icon(_isDetecting ? Icons.stop : Icons.power_settings_new),
+              icon: Icon(_isDetecting ? FontAwesomeIcons.stop : FontAwesomeIcons.powerOff),
               label: Text(_isDetecting ? 'Desligar' : 'Ligar Detector'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _isDetecting ? Colors.red : Colors.green,

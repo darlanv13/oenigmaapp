@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,7 +37,7 @@ class AdminFraudMonitorScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.security, size: 80, color: Colors.green.shade300),
+                  Icon(FontAwesomeIcons.shieldHalved, size: 80, color: Colors.green.shade300),
                   const SizedBox(height: 16),
                   const Text(
                     'Jogo Limpo! Nenhum alerta recente.',
@@ -63,7 +64,7 @@ class AdminFraudMonitorScreen extends ConsumerWidget {
                 color: Colors.red.shade50,
                 child: ListTile(
                   leading: const Icon(
-                    Icons.warning_amber_rounded,
+                    FontAwesomeIcons.triangleExclamation,
                     color: Colors.red,
                     size: 36,
                   ),
@@ -90,7 +91,7 @@ class AdminFraudMonitorScreen extends ConsumerWidget {
                     ],
                   ),
                   trailing: IconButton(
-                    icon: const Icon(Icons.block, color: Colors.red),
+                    icon: const Icon(FontAwesomeIcons.ban, color: Colors.red),
                     tooltip: 'Banir Usuário',
                     onPressed: () {
                       // Aqui você chamaria uma Cloud Function para alterar o status do usuário para "banido: true"

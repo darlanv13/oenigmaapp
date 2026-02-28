@@ -1,3 +1,4 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -100,7 +101,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
                   labelText: 'E-mail',
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: Icon(FontAwesomeIcons.envelope),
                   border: OutlineInputBorder(),
                 ),
                 validator: AppValidators.validarEmail,
@@ -114,7 +115,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 inputFormatters: [_cpfMask], // Aplica a formatação
                 decoration: const InputDecoration(
                   labelText: 'CPF (Sua Chave PIX)',
-                  prefixIcon: Icon(Icons.badge),
+                  prefixIcon: Icon(FontAwesomeIcons.idCard),
                   border: OutlineInputBorder(),
                 ),
                 validator: AppValidators.validarCPF,
@@ -128,7 +129,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 inputFormatters: [_phoneMask],
                 decoration: const InputDecoration(
                   labelText: 'Telefone (WhatsApp)',
-                  prefixIcon: Icon(Icons.phone),
+                  prefixIcon: Icon(FontAwesomeIcons.phone),
                   border: OutlineInputBorder(),
                 ),
                 validator: AppValidators.validarTelefone,
@@ -141,7 +142,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 obscureText: true,
                 decoration: const InputDecoration(
                   labelText: 'Senha',
-                  prefixIcon: Icon(Icons.lock),
+                  prefixIcon: Icon(FontAwesomeIcons.lock),
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) => value != null && value.length >= 6
